@@ -1,12 +1,9 @@
 import mill._
 import scalalib._
 import scalafmt._
-import $file.generators.`rocket-chip`.common
-import $file.generators.`rocket-chip`.dependencies.cde.common
-import $file.generators.`rocket-chip`.dependencies.hardfloat.common
 
 val defaultScalaVersion = "2.13.15"
-val pwd = os.Path(sys.env("MILL_WORKSPACE_ROOT"))
+val pwd = os.pwd // 使用当前目录作为工作区根目录
 
 def defaultVersions = Map(
   "chisel"        -> ivy"org.chipsalliance::chisel:6.6.0",
@@ -33,12 +30,51 @@ trait HasChisel extends SbtModule {
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(chiselPluginIvy.get)
 }
 
-val rocketChipPath = pwd / "generators" / "rocket-chip" / "common.sc"
-object rocketchip extends $file.rocketChipPath.RocketChipModule with HasChisel {
-  override def millSourcePath = pwd / "generators" / "rocket-chip"
+// 定义本地模块
+object macros extends ScalaModule {
+  override def millSourcePath = pwd / "generators" / "rocket-chip" / "macros"
+
+  override def scalaVersion = defaultScalaVersion
+
+  override def ivyDeps = super.ivyDeps() ++ Agg(
+    ivy"org.scala-lang:scala-reflect:${defaultScalaVersion}"
+  )
+}
+
+object cde extends ScalaModule {
+  override def millSourcePath = pwd / "generators" / "rocket-chip" / "cde"
+
   override def scalaVersion = defaultScalaVersion
 }
 
+object diplomacy extends ScalaModule {
+  override def millSourcePath = pwd / "generators" / "rocket-chip" / "diplomacy"
+
+  override def scalaVersion = defaultScalaVersion
+}
+
+object hardfloat extends ScalaModule {
+  override def millSourcePath = pwd / "generators" / "rocket-chip" / "hardfloat"
+
+  override def scalaVersion = defaultScalaVersion
+}
+
+// 定义 RocketChip 模块
+object rocketchip extends ScalaModule with HasChisel {
+  override def millSourcePath = pwd / "generators" / "rocket-chip"
+
+  override def scalaVersion = defaultScalaVersion
+
+  override def moduleDeps = super.moduleDeps ++ Seq(
+    macros, cde, diplomacy, hardfloat
+  )
+
+  override def ivyDeps = super.ivyDeps() ++ Agg(
+    defaultVersions("chiseltest")
+  )
+}
+
+// 定义主项目模块
 object myproject extends ScalaModule with HasChisel {
   override def millSourcePath = pwd
 
@@ -55,6 +91,8 @@ object myproject extends ScalaModule with HasChisel {
   override def scalacOptions = super.scalacOptions() ++ Agg("-deprecation", "-feature")
 
   object test extends ScalaModule with TestModule.ScalaTest {
+    override def scalaVersion = defaultScalaVersion
+
     override def moduleDeps = super.moduleDeps ++ Seq(
       rocketchip
     )
