@@ -1,0 +1,4 @@
+[submodule "generators/rocket-chip"]
+	path = generators/rocket-chip
+	url = https://github.com/chipsalliance/rocket-chip.git
+	branch = master
