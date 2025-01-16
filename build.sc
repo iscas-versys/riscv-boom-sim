@@ -5,13 +5,13 @@ import $file.generators.`rocket-chip`.dependencies.cde.{common => cdeCommon}
 import $file.generators.`rocket-chip`.dependencies.diplomacy.{common => diplomacyCommon}
 import $file.generators.`rocket-chip`.{common => rocketChipCommon}
 
-val chiselVersion = "7.0.0-M2"
-val defaultScalaVersion = "2.13.14"
+val chiselVersion = "3.6.1"
+val defaultScalaVersion = "2.13.9"
 val pwd = os.Path(sys.env("MILL_WORKSPACE_ROOT"))
 
 object v {
-  def chiselIvy: Option[Dep] = Some(ivy"org.chipsalliance::chisel:${chiselVersion}")
-  def chiselPluginIvy: Option[Dep] = Some(ivy"org.chipsalliance:::chisel-plugin:${chiselVersion}")
+  def chiselIvy: Option[Dep] = Some(ivy"edu.berkeley.cs::chisel3:${chiselVersion}")
+  def chiselPluginIvy: Option[Dep] = Some(ivy"edu.berkeley.cs:::chisel3-plugin:${chiselVersion}")
 }
 
 trait HasThisChisel extends SbtModule {
@@ -85,3 +85,34 @@ trait testSoC extends testSoCModule with HasThisChisel {
   override def sources = Task.Sources(millSourcePath / "src")
   def rocketModule = rocketchip
 }
+
+trait Boom extends ScalaModule with HasThisChisel {
+  override def millSourcePath = pwd / "generators" / "riscv-boom"  // 设置模块路径
+  override def scalaVersion = defaultScalaVersion  // 设置 Scala 版本
+  override def scalacOptions = Seq(
+    "-language:reflectiveCalls",
+    "-deprecation",
+    "-feature",
+    "-Xcheckinit",
+    "-P:chiselplugin:genBundleElements"
+  )
+
+  // 依赖本地的 rocketchip 模块
+  def rocketModule: ScalaModule = rocketchip
+
+  // 添加 rocketchip 作为模块依赖
+  override def moduleDeps = super.moduleDeps ++ Seq(rocketModule)
+
+  // 移除对 rocketchip 的 Ivy 依赖，直接使用本地模块
+  override def ivyDeps = Agg(
+    ivy"edu.berkeley.cs::chisel3:3.6.1",  // 保留 chisel3 依赖
+    ivy"ch.epfl.scala::bloop-config:1.5.5"  // 其他依赖
+  )
+
+  override def scalacPluginIvyDeps = Agg(
+    ivy"edu.berkeley.cs:::chisel3-plugin:3.6.1",  // Chisel 插件
+  )
+}
+
+// 定义 Boom 对象
+object boom extends Boom

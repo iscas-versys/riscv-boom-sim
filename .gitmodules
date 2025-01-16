@@ -2,3 +2,7 @@
 	path = generators/rocket-chip
 	url = https://github.com/chipsalliance/rocket-chip.git
 	branch = master
+[submodule "generators/riscv-boom"]
+	path = generators/riscv-boom
+	url = https://github.com/riscv-boom/riscv-boom.git
+	branch = master
