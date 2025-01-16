@@ -6,3 +6,7 @@
 	path = generators/riscv-boom
 	url = https://github.com/riscv-boom/riscv-boom.git
 	branch = master
+[submodule "difftest"]
+	path = difftest
+	url = https://github.com/OpenXiangShan/difftest.git
+	branch = master

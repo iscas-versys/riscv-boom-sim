@@ -112,3 +112,14 @@ trait Boom extends ScalaModule with HasThisChisel {
 }
 
 object boom extends Boom
+
+trait Difftest extends ScalaModule with HasThisChisel{
+  def scalaVersion = defaultScalaVersion
+  def millSourcePath = pwd / "difftest"
+  def chiselModule: Option[ScalaModule] = None
+  def chiselPluginJar: T[Option[PathRef]] = None
+  def chiselIvy: Option[Dep] = v.chiselIvy
+  def chiselPluginIvy: Option[Dep] = v.chiselPluginIvy
+}
+
+object difftest extends Difftest
