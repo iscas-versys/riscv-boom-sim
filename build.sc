@@ -87,8 +87,8 @@ trait testSoC extends testSoCModule with HasThisChisel {
 }
 
 trait Boom extends ScalaModule with HasThisChisel {
-  override def millSourcePath = pwd / "generators" / "riscv-boom"  // 设置模块路径
-  override def scalaVersion = defaultScalaVersion  // 设置 Scala 版本
+  override def millSourcePath = pwd / "generators" / "riscv-boom"
+  override def scalaVersion = defaultScalaVersion
   override def scalacOptions = Seq(
     "-language:reflectiveCalls",
     "-deprecation",
@@ -97,22 +97,18 @@ trait Boom extends ScalaModule with HasThisChisel {
     "-P:chiselplugin:genBundleElements"
   )
 
-  // 依赖本地的 rocketchip 模块
   def rocketModule: ScalaModule = rocketchip
 
-  // 添加 rocketchip 作为模块依赖
   override def moduleDeps = super.moduleDeps ++ Seq(rocketModule)
 
-  // 移除对 rocketchip 的 Ivy 依赖，直接使用本地模块
   override def ivyDeps = Agg(
-    ivy"edu.berkeley.cs::chisel3:3.6.1",  // 保留 chisel3 依赖
-    ivy"ch.epfl.scala::bloop-config:1.5.5"  // 其他依赖
+    ivy"edu.berkeley.cs::chisel3:$chiselVersion",
+    ivy"ch.epfl.scala::bloop-config:2.0.3"
   )
 
   override def scalacPluginIvyDeps = Agg(
-    ivy"edu.berkeley.cs:::chisel3-plugin:3.6.1",  // Chisel 插件
+    ivy"edu.berkeley.cs:::chisel3-plugin:$chiselVersion",
   )
 }
 
-// 定义 Boom 对象
 object boom extends Boom
