@@ -74,6 +74,7 @@ trait RocketChip extends rocketChipCommon.RocketChipModule with HasThisChisel {
 
 trait testSoCModule extends ScalaModule {
   def rocketModule: ScalaModule
+  def boomModule: ScalaModule
   override def moduleDeps = super.moduleDeps ++ Seq(
     rocketModule, boomModule
   )

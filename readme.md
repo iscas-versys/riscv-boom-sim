@@ -13,5 +13,11 @@ CIRCT firtool-1.43.0
 ```
 ## 编译命令
 ```bash
-    mill -i generator[6.5.0].runMain freechips.rocketchip.system.FuzzMain --target-dir /root/research/rocket-chip/build/rtl --full-stacktrace --split-verilog
+mill -i generator[6.5.0].runMain freechips.rocketchip.system.FuzzMain --target-dir /root/research/rocket-chip/build/rtl --full-stacktrace --split-verilog
 ```
+- --split-verilog 在新版本的firrtl里面并不支持，可能有别的名字，请在编译的时候主动指定。
+## 在根目录下的编译命令
+```bash
+mill -i testsoc.runMain testsoc.SimMain --target-dir ./build/rtl --full-stacktrace
+```
+- 目前直接拷贝了之前rocket-chip里面能用的bootrom，之后可能需要一些修改。
