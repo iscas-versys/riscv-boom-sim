@@ -6,7 +6,13 @@ import firrtl.stage.FirrtlCli
 import freechips.rocketchip.system._
 import freechips.rocketchip.diplomacy.DisableMonitors
 
+import org.chipsalliance.cde.config.Config
+import freechips.rocketchip.rocket.{WithNBigCores}
+import freechips.rocketchip.subsystem.{WithCoherentBusTopology}
+import boom.v3.common.{WithNSmallBooms}
 
+class RocketDefaultConfig extends Config(new WithNBigCores(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
+class BOOMDefaultConfig   extends Config(new WithNSmallBooms(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
 class FuzzStage extends ChiselStage {
   override val shell: Shell = new Shell("rocket-chip")
     with ChiselCli
@@ -18,7 +24,7 @@ object SimMain {
   def main(args: Array[String]): Unit = {
     (new FuzzStage).execute(args, Seq(
       ChiselGeneratorAnnotation(() => {
-        freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new DefaultConfig)
+        freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new BOOMDefaultConfig)
       })
     ))
   }

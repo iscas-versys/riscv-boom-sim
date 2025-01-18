@@ -21,3 +21,6 @@ mill -i generator[6.5.0].runMain freechips.rocketchip.system.FuzzMain --target-d
 mill -i testsoc.runMain testsoc.SimMain --target-dir ./build/rtl --full-stacktrace
 ```
 - 目前直接拷贝了之前rocket-chip里面能用的bootrom，之后可能需要一些修改。
+
+## 关于BOOM的编译
+- 类似于Rocket Core，BOOM的核心名称是boomcore
