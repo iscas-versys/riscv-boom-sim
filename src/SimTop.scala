@@ -24,7 +24,8 @@ object SimMain {
   def main(args: Array[String]): Unit = {
     (new FuzzStage).execute(args, Seq(
       ChiselGeneratorAnnotation(() => {
-        freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new BOOMDefaultConfig)
+        freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new RocketDefaultConfig)
+        // freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new BOOMDefaultConfig)
       })
     ))
   }
