@@ -38,7 +38,7 @@ trait RocketChip extends rocketChipCommon.RocketChipModule with HasThisChisel {
   def diplomacyIvy = None
   def mainargsIvy = ivy"com.lihaoyi::mainargs:0.5.4"
   def json4sJacksonIvy = ivy"org.json4s::json4s-jackson:4.0.6"
-
+  override def moduleDeps = super.moduleDeps ++ Seq(difftest)
   object macros extends Macros
   trait Macros extends rocketChipCommon.MacrosModule with SbtModule {
     def scalaVersion: T[String] = T(defaultScalaVersion)
@@ -99,7 +99,7 @@ trait Boom extends ScalaModule with HasThisChisel {
 
   def rocketModule: ScalaModule = rocketchip
 
-  override def moduleDeps = super.moduleDeps ++ Seq(rocketModule)
+  override def moduleDeps = super.moduleDeps ++ Seq(rocketModule) ++ Seq(difftest)
 
   override def ivyDeps = Agg(
     ivy"edu.berkeley.cs::chisel3:$chiselVersion",
