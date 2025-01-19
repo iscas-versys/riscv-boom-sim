@@ -1,56 +1,43 @@
+// See LICENSE.SiFive for license details.
 package testsoc
 
-import chisel3.stage.{ChiselCli, ChiselGeneratorAnnotation, ChiselStage}
-import firrtl.options.Shell
-import firrtl.stage.FirrtlCli
-import freechips.rocketchip.system._
-import freechips.rocketchip.diplomacy.DisableMonitors
+import chisel3._
 
-import org.chipsalliance.cde.config.Config
-import freechips.rocketchip.rocket.{WithNBigCores}
-import freechips.rocketchip.subsystem.{WithCoherentBusTopology}
-import boom.v3.common.{WithNSmallBooms}
+import org.chipsalliance.cde.config._
+import org.chipsalliance.diplomacy.lazymodule._
 
-class RocketDefaultConfig extends Config(new WithNBigCores(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
-class BOOMDefaultConfig   extends Config(new WithNSmallBooms(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
-class FuzzStage extends ChiselStage {
-  override val shell: Shell = new Shell("rocket-chip")
-    with ChiselCli
-    with FirrtlCli
+import freechips.rocketchip.devices.debug.Debug
+import freechips.rocketchip.util.AsyncResetReg
+import freechips.rocketchip.system.{ExampleRocketSystem, SimAXIMem}
+// package freechips.rocketchip.system
+
+class SimTop()(implicit p: Parameters) extends Module {
+  val io = IO(new Bundle {
+    val success = Output(Bool())
+  })
+
+  val ldut = LazyModule(new ExampleRocketSystem)
+  val dut = Module(ldut.module)
+
+  ldut.io_clocks.get.elements.values.foreach(_.clock := clock)
+  // Allow the debug ndreset to reset the dut, but not until the initial reset has completed
+  val dut_reset = (reset.asBool | ldut.debug.map { debug => AsyncResetReg(debug.ndreset) }.getOrElse(false.B)).asBool
+  ldut.io_clocks.get.elements.values.foreach(_.reset := dut_reset)
+
+  dut.dontTouchPorts()
+  dut.tieOffInterrupts()
+  SimAXIMem.connectMem(ldut)
+  SimAXIMem.connectMMIO(ldut)
+  ldut.l2_frontend_bus_axi4.foreach( a => {
+    a.ar.valid := false.B
+    a.ar.bits := DontCare
+    a.aw.valid := false.B
+    a.aw.bits := DontCare
+    a.w.valid := false.B
+    a.w.bits := DontCare
+    a.r.ready := false.B
+    a.b.ready := false.B
+  })
+  //ldut.l2_frontend_bus_axi4.foreach(_.tieoff)
+  Debug.connectDebug(ldut.debug, ldut.resetctrl, ldut.psd, clock, reset.asBool, io.success)
 }
-
-// freechips.rocketchip.system.DefaultConfig
-object SimMain {
-  def main(args: Array[String]): Unit = {
-    (new FuzzStage).execute(args, Seq(
-      ChiselGeneratorAnnotation(() => {
-        freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new RocketDefaultConfig)
-        // freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new BOOMDefaultConfig)
-      })
-    ))
-  }
-}
-
-// package testsoc
-
-// import chisel3._
-// import chisel3.stage.{ChiselGeneratorAnnotation, ChiselStage}
-// import firrtl.options.Shell
-// import firrtl.stage.FirrtlCli
-
-// class SimpleCircuit extends Module {
-//   val io = IO(new Bundle {
-//     val in  = Input(Bool())
-//     val out = Output(Bool())
-//   })
-//   io.out := io.in
-// }
-
-// object SimMain {
-//   def main(args: Array[String]): Unit = {
-//     println("Hello World!!!")
-//     (new ChiselStage).execute(args, Seq(
-//       ChiselGeneratorAnnotation(() => new SimpleCircuit)
-//     ))
-//   }
-// }
