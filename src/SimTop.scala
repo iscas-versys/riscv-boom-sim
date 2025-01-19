@@ -2,7 +2,7 @@
 package testsoc
 
 import chisel3._
-
+import difftest.DifftestModule
 import org.chipsalliance.cde.config._
 import org.chipsalliance.diplomacy.lazymodule._
 
@@ -40,4 +40,9 @@ class SimTop()(implicit p: Parameters) extends Module {
   })
   //ldut.l2_frontend_bus_axi4.foreach(_.tieoff)
   Debug.connectDebug(ldut.debug, ldut.resetctrl, ldut.psd, clock, reset.asBool, io.success)
+  
+  // ldut.module.meip.foreach(_.foreach(_ := false.B))
+  // ldut.module.seip.foreach(_.foreach(_ := false.B))
+  // val difftest = DifftestModule.finish("rocket-chip")
+  // val difftest = DifftestModule.finish("riscv-boom")
 }

@@ -24,3 +24,13 @@ mill -i testsoc.runMain testsoc.SimMain --target-dir ./build/rtl --full-stacktra
 
 ## 关于BOOM的编译
 - 类似于Rocket Core，BOOM的核心名称是boomcore
+
+## 关于环境变量
+- 需要注意指定NOOP_HOME到根目录
+```bash
+  export NOOP_HOME=/home/shensd/hw_verification/RocketChipImport
+```
+- 或者直接运行
+```bash
+  source env.sh
+```
