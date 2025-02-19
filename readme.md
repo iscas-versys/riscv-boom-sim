@@ -1,6 +1,10 @@
 # RocketChipImport
 尝试把rocketchip项目引入到自己的项目中
 
+## 使用的RocketChip和BOOM
+均使用自己仓库托管的分支:
+- [rocket-chip](https://github.com/SeddonShen/rocket-chip/tree/dev-difftest-boom)
+- [riscv-boom](https://github.com/SeddonShen/riscv-boom/tree/dev-difftest)
 ## 注意事项
 - verilator需要直接编译最新Git仓库: (目前可用) Verilator 5.033 devel rev v5.032-66-gcc1133c0d
 - rocket-chip应该指定mill版本为`0.11.7`
