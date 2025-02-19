@@ -100,8 +100,8 @@ object SimMain {
     (new FuzzStage).execute(args, Seq(
       ChiselGeneratorAnnotation(() => {
         
-        freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new SimRocketConfig)
-        // freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new SimBOOMConfig)
+        // freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new SimRocketConfig)
+        freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new SimBOOMConfig)
         // freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new RocketDefaultConfig)
         // freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new BOOMDefaultConfig)
       })

@@ -42,6 +42,7 @@ class SimTop()(implicit p: Parameters) extends Module {
   val dut_reset = (reset.asBool | ldut.debug.map { debug => AsyncResetReg(debug.ndreset) }.getOrElse(false.B)).asBool
 
   SimAXIMem.connectMem(ldut)
+  // SimAXIMem.connectMMIO(ldut)
   val success = WireInit(false.B)
   Debug.connectDebug(ldut.debug, ldut.resetctrl, ldut.psd, clock, reset.asBool, success)
 
