@@ -101,11 +101,12 @@ trait Boom extends ScalaModule with HasThisChisel {
 
   def rocketModule: ScalaModule = rocketchip
 
-  override def moduleDeps = super.moduleDeps ++ Seq(rocketModule) ++ Seq(difftest)
+  override def moduleDeps = super.moduleDeps ++ Seq(rocketModule) ++ Seq(difftest) ++ Seq(riscvspeccore)
 
   override def ivyDeps = Agg(
     ivy"edu.berkeley.cs::chisel3:$chiselVersion",
-    ivy"ch.epfl.scala::bloop-config:2.0.3"
+    ivy"ch.epfl.scala::bloop-config:2.0.3"//,
+    //ivy"cn.ac.ios.tis::riscvspeccore:1.3-SNAPSHOT"
   )
 
   override def scalacPluginIvyDeps = Agg(
@@ -114,6 +115,16 @@ trait Boom extends ScalaModule with HasThisChisel {
 }
 
 object boom extends Boom
+
+trait riscvSpecCore extends ScalaModule with HasThisChisel {
+  def scalaVersion = defaultScalaVersion
+  def millSourcePath = pwd / "riscv-spec-core"
+  def chiselModule: Option[ScalaModule] = None
+  def chiselPluginJar: T[Option[PathRef]] = None
+  def chiselIvy: Option[Dep] = v.chiselIvy
+  def chiselPluginIvy: Option[Dep] = v.chiselPluginIvy
+}
+object riscvspeccore extends riscvSpecCore
 
 trait Difftest extends ScalaModule with HasThisChisel{
   def scalaVersion = defaultScalaVersion
