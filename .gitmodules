@@ -1,6 +1,6 @@
 [submodule "generators/rocket-chip"]
 	path = generators/rocket-chip
-	url = https://github.com/SeddonShen/rocket-chip.git
+	url = https://github.com/iscas-versys/rocket-chip.git
 	branch = master
 [submodule "difftest"]
 	path = difftest
@@ -8,4 +8,5 @@
 	branch = master
 [submodule "generators/riscv-boom"]
 	path = generators/riscv-boom
-	url = https://github.com/SeddonShen/riscv-boom.git
+	url = https://github.com/iscas-versys/riscv-boom-difftest.git
+	branch = formal
