@@ -14,16 +14,17 @@ import freechips.rocketchip.subsystem._
 import freechips.rocketchip.devices.debug.{Debug, DebugModuleKey}
 import freechips.rocketchip.devices.tilelink._
 
+import xfuzz.CoverPoint
+import boom.v3.common.WithNBMCBooms
+
 class RocketDefaultConfig extends Config(new WithNBigCores(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
 class BOOMDefaultConfig   extends Config(new WithNSmallBooms(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
 
 class SimBOOMConfig extends Config(
-  new WithNSmallBooms(1).alter((site, _, up) => {
+  new WithNBMCBooms(1).alter((site, _, up) => {
     case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site).map {
       case tp: BoomTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
         core = tp.tileParams.core.copy(
-          // haveNemuTrap = true,
-          // haveCease = false,
           nPMPs = 0,
           nBreakpoints = 0
         )
@@ -105,7 +106,8 @@ object SimMain {
         // freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new RocketDefaultConfig)
         // freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new BOOMDefaultConfig)
       })
-    ))
+    ) ++ CoverPoint.getTransforms(args)._2
+    )
   }
 }
 

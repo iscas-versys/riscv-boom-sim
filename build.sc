@@ -8,6 +8,7 @@ import $file.generators.`rocket-chip`.{common => rocketChipCommon}
 val chiselVersion = "3.6.1"
 val defaultScalaVersion = "2.13.9"
 val pwd = os.Path(sys.env("MILL_WORKSPACE_ROOT"))
+// val pwd = os.Path(sys.env("NOOP_HOME"))
 
 object v {
   def chiselIvy: Option[Dep] = Some(ivy"edu.berkeley.cs::chisel3:${chiselVersion}")
@@ -101,7 +102,7 @@ trait Boom extends ScalaModule with HasThisChisel {
 
   def rocketModule: ScalaModule = rocketchip
 
-  override def moduleDeps = super.moduleDeps ++ Seq(rocketModule) ++ Seq(difftest)
+  override def moduleDeps = super.moduleDeps ++ Seq(rocketModule) ++ Seq(difftest) ++ Seq(ccover)
 
   override def ivyDeps = Agg(
     ivy"edu.berkeley.cs::chisel3:$chiselVersion",
@@ -125,3 +126,28 @@ trait Difftest extends ScalaModule with HasThisChisel{
 }
 
 object difftest extends Difftest
+
+trait CcoverModule extends ScalaModule with HasThisChisel{
+
+  def scalaVersion = defaultScalaVersion
+
+  def sourceRoot = T.sources { T.workspace / "ccover" / "instrumentation" / "src" }
+//   def sourceRoot = pwd / "ccover" / "instrumentation" / "src"
+
+  private def getSources(p: PathRef) = if (os.exists(p.path)) os.walk(p.path) else Seq()
+
+  def allSources = T { sourceRoot().flatMap(getSources).map(PathRef(_)) }
+
+  def chiselModule: Option[ScalaModule] = None
+
+  def chiselPluginJar: T[Option[PathRef]] = None
+
+  def chiselIvy: Option[Dep] = v.chiselIvy
+
+  def chiselPluginIvy: Option[Dep] = v.chiselPluginIvy
+
+  def ivyDeps = super.ivyDeps() ++ Agg(ivy"edu.berkeley.cs::chiseltest:0.6.2")
+
+}
+
+object ccover extends CcoverModule 

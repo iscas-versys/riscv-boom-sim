@@ -4,3 +4,7 @@ build/
 .metals/
 .bsp/
 .vscode/
+
+tmp/
+corpus/
+crashes/
