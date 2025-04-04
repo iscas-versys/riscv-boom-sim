@@ -29,7 +29,7 @@ export FOOTPRINTS_CORPUS=$(pwd)/corpus/footprints/riscv-all
 # RTL Source and Destination
 # export RTL_SRC_DIR=$(pwd)/build/rtl
 export RTL_INIT_DIR=$(pwd)/ccover/SetInitValues
-export RTL_SRC_DIR=$(pwd)/ccover/Formal/demo/rocket
+export RTL_SRC_DIR=$(pwd)/ccover/Formal/demo/boom
 export RTL_DST_DIR=$(pwd)/ccover/Formal/coverTasks/rtl
 
 # sby template

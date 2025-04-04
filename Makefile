@@ -49,6 +49,11 @@ emu: sim-verilog
 	@echo "Mill Args: $(MILL_ARGS)"
 	@$(MAKE) -C difftest emu WITH_CHISELDB=0 WITH_CONSTANTIN=0 RTL_SUFFIX=$(RTL_SUFFIX) CPU=ROCKET_CHIP
 
+src: sim-verilog
+
+fuzzer:
+	@$(MAKE) -C difftest fuzzer WITH_CHISELDB=0 WITH_CONSTANTIN=0 RTL_SUFFIX=$(RTL_SUFFIX) CPU=ROCKET_CHIP
+
 clean:
 	rm -rf $(BUILD_DIR)
 idea:
