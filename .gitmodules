@@ -10,6 +10,3 @@
 	path = generators/riscv-boom
 	url = https://github.com/iscas-versys/riscv-boom-difftest.git
 	branch = SFuzz
-[submodule "ccover"]
-	path = ccover
-	url = https://github.com/SeddonShen/SFuzz.git
