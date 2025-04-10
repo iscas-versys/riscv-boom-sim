@@ -13,6 +13,7 @@ import boom.v3.common.{WithNSmallBooms, BoomTileAttachParams}
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.devices.debug.{Debug, DebugModuleKey}
 import freechips.rocketchip.devices.tilelink._
+import firrtl.transforms.formal.DontAssertSubmoduleAssumptionsAnnotation
 
 class RocketDefaultConfig extends Config(new WithNBigCores(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
 class BOOMDefaultConfig   extends Config(new WithNSmallBooms(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
@@ -98,6 +99,7 @@ class FuzzStage extends ChiselStage {
 object SimMain {
   def main(args: Array[String]): Unit = {
     (new FuzzStage).execute(args, Seq(
+      DontAssertSubmoduleAssumptionsAnnotation,
       ChiselGeneratorAnnotation(() => {
         
         // freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new SimRocketConfig)

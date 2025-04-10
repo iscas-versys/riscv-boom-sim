@@ -99,6 +99,7 @@ trait Boom extends ScalaModule with HasThisChisel {
     "-P:chiselplugin:genBundleElements"
   )
 
+  
   def rocketModule: ScalaModule = rocketchip
 
   override def moduleDeps = super.moduleDeps ++ Seq(rocketModule) ++ Seq(difftest) ++ Seq(riscvspeccore)
