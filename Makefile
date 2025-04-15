@@ -52,7 +52,7 @@ emu: sim-verilog
 src: sim-verilog
 
 fuzzer:
-	@$(MAKE) -C difftest fuzzer WITH_CHISELDB=0 WITH_CONSTANTIN=0 RTL_SUFFIX=$(RTL_SUFFIX) CPU=ROCKET_CHIP
+	@$(MAKE) -C difftest emu WITH_CHISELDB=0 WITH_CONSTANTIN=0 RTL_SUFFIX=$(RTL_SUFFIX) CPU=ROCKET_CHIP
 
 clean:
 	rm -rf $(BUILD_DIR)
