@@ -22,9 +22,9 @@ CIRCT firtool-1.43.0
 mill -i generator[6.5.0].runMain freechips.rocketchip.system.FuzzMain --target-dir /root/research/rocket-chip/build/rtl --full-stacktrace --split-verilog
 ```
 - --split-verilog 在新版本的firrtl里面并不支持，可能有别的名字，请在编译的时候主动指定。
-### 在根目录下的编译命令
+### 在根目录下的编译命令(形式化验证用)
 ```bash
-mill -i testsoc.runMain testsoc.SimMain --target-dir ./build/rtl --full-stacktrace
+mill -i testsoc.runMain testsoc.SimMain --target-dir ./build/rtl --full-stacktrace -X sverilog
 ```
 - 目前直接拷贝了之前rocket-chip里面能用的bootrom，之后可能需要一些修改。
 
@@ -39,7 +39,7 @@ mill -i testsoc.runMain testsoc.SimMain --target-dir ./build/rtl --full-stacktra
 ## 关于环境变量
 - 需要注意指定NOOP_HOME到根目录
 ```bash
-  export NOOP_HOME=/home/shensd/hw_verification/RocketChipImport
+  export NOOP_HOME=$(pwd)
 ```
 - 或者直接运行
 ```bash
