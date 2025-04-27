@@ -10,3 +10,7 @@
 	path = generators/riscv-boom
 	url = https://github.com/iscas-versys/riscv-boom-difftest.git
 	branch = formal
+
+[submodule "riscv-spec-core"]
+    path = riscv-spec-core
+    url = https://github.com/iscas-tis/riscv-spec-core.git
