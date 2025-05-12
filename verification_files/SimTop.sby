@@ -1,0 +1,30 @@
+[options]
+mode bmc
+depth 30
+
+[engines]
+smtbmc bitwuzla
+
+[script]
+read_verilog -sv Core.v
+read -sv define.sv
+read_verilog -sv SimTop.sv
+read_verilog -sv DifftestArchEvent.v
+read_verilog -sv DifftestTrapEvent.v 
+read_verilog -sv DifftestCSRState.v 
+read_verilog -sv DifftestArchIntRegState.v 
+read_verilog -sv DifftestInstrCommit.v 
+read_verilog -sv MemRWHelper.v
+
+prep -top Core
+
+[files]
+SimTop.sv
+define.sv
+Core.v
+DifftestArchEvent.v
+DifftestArchIntRegState.v 
+DifftestCSRState.v 
+DifftestInstrCommit.v 
+DifftestTrapEvent.v 
+MemRWHelper.v
