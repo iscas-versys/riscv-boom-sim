@@ -12,6 +12,8 @@ import freechips.rocketchip.system.{ExampleRocketSystem, SimAXIMem}
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.util._
+import chisel3.util.experimental.BoringUtils
+import chisel3.util._
 // package freechips.rocketchip.system
 class ExampleSimSystem(implicit p: Parameters) extends RocketSubsystem
   with CanHaveMasterAXI4MemPort
@@ -31,9 +33,11 @@ class ExampleSimSystemImp[+L <: ExampleSimSystem](_outer: L) extends RocketSubsy
 }
 
 class SimTop()(implicit p: Parameters) extends Module {
-  // val io = IO(new Bundle {
-  //   val success = Output(Bool())
-  // })
+  val commitWidth = 2
+  val io = IO(new Bundle {
+    val select = Input(UInt(log2Ceil(commitWidth).W))
+  })
+
 
   // val ldut = LazyModule(new ExampleRocketSystem)
   val ldut = LazyModule(new ExampleSimSystem)
@@ -51,6 +55,8 @@ class SimTop()(implicit p: Parameters) extends Module {
   ldut.io_clocks.get.elements.values.foreach(_.reset := dut_reset)
   ldut.module.meip.foreach(_.foreach(_ := false.B))
   ldut.module.seip.foreach(_.foreach(_ := false.B))
+
+  BoringUtils.addSource(io.select, "flying_select")
   // dut.dontTouchPorts()
   // dut.tieOffInterrupts()
   // SimAXIMem.connectMMIO(ldut)
