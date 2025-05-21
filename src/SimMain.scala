@@ -27,7 +27,10 @@ class SimBOOMConfig extends Config(
           // haveNemuTrap = true,
           // haveCease = false,
           nPMPs = 0,
-          nBreakpoints = 0
+          nBreakpoints = 0,
+          enableRiscvFormal = true,
+          enableDifftest = true,
+          enablechirvFormal = false
         )
       ))
     }
