@@ -7,11 +7,13 @@ import $file.generators.`rocket-chip`.{common => rocketChipCommon}
 
 val chiselVersion = "3.6.1"
 val defaultScalaVersion = "2.13.9"
+val chiselTestVersion = "0.6.0"
 val pwd = os.Path(sys.env("MILL_WORKSPACE_ROOT"))
 
 object v {
   def chiselIvy: Option[Dep] = Some(ivy"edu.berkeley.cs::chisel3:${chiselVersion}")
   def chiselPluginIvy: Option[Dep] = Some(ivy"edu.berkeley.cs:::chisel3-plugin:${chiselVersion}")
+  def chiselTestIvy: Dep = ivy"edu.berkeley.cs::chiseltest:$chiselTestVersion"
 }
 
 trait HasThisChisel extends SbtModule {
@@ -86,6 +88,7 @@ trait testSoC extends testSoCModule with HasThisChisel {
   override def sources = Task.Sources(millSourcePath / "src")
   def rocketModule = rocketchip
   def boomModule = boom
+  override def ivyDeps = super.ivyDeps() ++ Agg(v.chiselTestIvy)
 }
 
 trait Boom extends ScalaModule with HasThisChisel {

@@ -15,6 +15,8 @@ import freechips.rocketchip.devices.debug.{Debug, DebugModuleKey}
 import freechips.rocketchip.devices.tilelink._
 import firrtl.transforms.formal.DontAssertSubmoduleAssumptionsAnnotation
 import firrtl.stage.RunFirrtlTransformAnnotation
+import chiseltest.formal._
+import chiseltest.HasTestName
 
 class RocketDefaultConfig extends Config(new WithNBigCores(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
 class BOOMDefaultConfig   extends Config(new WithNSmallBooms(1) ++ new WithCoherentBusTopology ++ new BaseConfig)
@@ -100,7 +102,8 @@ class FuzzStage extends ChiselStage {
 }
 
 // freechips.rocketchip.system.DefaultConfig
-object SimMain {
+object SimMain extends HasTestName with Formal{
+  def getTestName: String = "SimMain"
   def main(args: Array[String]): Unit = {
     (new FuzzStage).execute(args, Seq(
       DontAssertSubmoduleAssumptionsAnnotation,
@@ -112,6 +115,14 @@ object SimMain {
         // freechips.rocketchip.diplomacy.DisableMonitors(p => new TestHarness()(p))(new BOOMDefaultConfig)
       })
     ))
+    // verify(freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new SimBOOMConfig), Seq(BoundedCheck(12), BtormcEngineAnnotation))
+  }
+}
+
+object SimVerify extends HasTestName with Formal{
+  def getTestName: String = "SimVerify"
+  def main(args: Array[String]): Unit = {
+    verify(freechips.rocketchip.diplomacy.DisableMonitors(p => new SimTop()(p))(new SimBOOMConfig), Seq(BoundedCheck(12), BtormcEngineAnnotation))
   }
 }
 
